@@ -13,7 +13,14 @@ class HomeScreen extends ConsumerWidget {
     final data = ref.watch(userDataProvider);
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Riverpod Cache Network'),
+          title: const Text('Riverpod Get'),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  ref.invalidate(userDataProvider);
+                },
+                icon: const Icon(Icons.refresh))
+          ],
         ),
         body: data.when(
           data: (data) {
@@ -46,7 +53,17 @@ class HomeScreen extends ConsumerWidget {
               ],
             );
           },
-          error: (err, s) => Text(err.toString()),
+          error: (error, stackTrace) {
+            return Center(
+              child: ElevatedButton(
+                child: const Text('Retry Load Data'),
+                onPressed: () {
+                  ref.invalidate(userDataProvider);
+                },
+              ),
+            );
+          },
+          // error: (err, s) => Text(err.toString()),
           loading: () => const CircularProgressIndicator(),
         ));
   }
